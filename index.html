@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>От Диера</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --accent-color: #007AFF;
+            --accent-hover: #0056b3;
+            --text-main: #1c1c1e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: 0;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+        .blob-1 {
+            width: 250px;
+            height: 250px;
+            background: #ff9a9e;
+            top: 10%;
+            left: 10%;
+        }
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: #a1c4fd;
+            bottom: 10%;
+            right: 10%;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.1); }
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-main);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #48484a;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .datetime-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .input-glass {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-glass:focus {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: var(--accent-color);
+        }
+
+        .places-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .chip.selected {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        textarea.input-glass {
+            width: 100%;
+            height: 90px;
+            resize: none;
+            margin-bottom: 24px;
+        }
+
+        .buttons-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 18px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.4);
+            color: #3a3a3c;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-screen.active {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            text-align: left;
+        }
+
+        .result-item span {
+            font-weight: 600;
+            color: #48484a;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <div class="card">
+        <div id="form-screen">
+            <h1>От Диера</h1>
+
+            <div class="section-title">Когда?</div>
+            <div class="datetime-group">
+                <input type="date" id="dateInput" class="input-glass">
+                <input type="time" id="timeInput" class="input-glass">
+            </div>
+
+            <div class="section-title">Куда?</div>
+            <div class="places-grid" id="placesGrid">
+                <div class="chip" data-place="📚 Библиотека">📚 Библиотека</div>
+                <div class="chip" data-place="🌳 Президентский парк">🌳 Президентский парк</div>
+                <div class="chip" data-place="🚶 Прогулка по городу">🚶 Прогулка по городу</div>
+                <div class="chip" data-place="🕌 Ходжа Ахмет Ясауи">🕌 Ходжа Ахмет Ясауи</div>
+                <div class="chip" data-place="🌿 Эко-парк">🌿 Эко-парк</div>
+                <div class="chip" data-place="☕ Кофейня">☕ Кофейня</div>
+                <div class="chip" data-place="⛪ Церковь">⛪ Церковь</div>
+                <div class="chip" data-place="🎬 Кино">🎬 Кино</div>
+            </div>
+
+            <div class="section-title">Комментарий</div>
+            <textarea id="commentInput" class="input-glass" placeholder="Ваши пожелания или комментарии..."></textarea>
+
+            <div class="buttons-group">
+                <button class="btn btn-primary" onclick="submitForm(true)">Договорились ♡</button>
+                <button class="btn btn-secondary" onclick="submitForm(false)">Не получится</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="result-screen">
+            <div id="result-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const BOT_TOKEN = '8661747024:AAFnK4oqN3_birAz3WV7cWOZpilyNrlJQUc';
+        const CHAT_ID = '8157788321';
+
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                chip.classList.toggle('selected');
+            });
+        });
+
+        function sendTelegramNotification(messageText) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: messageText,
+                    parse_mode: 'HTML'
+                })
+            }).catch(err => console.log('Ошибка отправки:', err));
+        }
+
+        function submitForm(accepted) {
+            const date = document.getElementById('dateInput').value;
+            const time = document.getElementById('timeInput').value;
+            const comment = document.getElementById('commentInput').value.trim();
+            
+            const selectedPlaces = Array.from(document.querySelectorAll('.chip.selected'))
+                .map(c => c.getAttribute('data-place'));
+
+            const formScreen = document.getElementById('form-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const resultContent = document.getElementById('result-content');
+
+            if (accepted) {
+                if (!date || !time) {
+                    alert('Пожалуйста, выберите дату и время!');
+                    return;
+                }
+                if (selectedPlaces.length === 0) {
+                    alert('Пожалуйста, выберите хотя бы одно место!');
+                    return;
+                }
+
+                const tgText = `✨ <b>Откликнулись: Договорились! ♡</b>\n\n` +
+                    `📅 <b>Дата:</b> ${date}\n` +
+                    `⏰ <b>Время:</b> ${time}\n` +
+                    `📍 <b>Места:</b>\n${selectedPlaces.map(p => `• ${p}`).join('\n')}\n` +
+                    (comment ? `💬 <b>Комментарий:</b> ${comment}` : '');
+                
+                sendTelegramNotification(tgText);
+
+                resultContent.innerHTML = `
+                    <div class="result-title">Договорились! ♡</div>
+                    <div class="result-item"><span>Дата и время</span>${date} в ${time}</div>
+                    <div class="result-item"><span>Выбранные места</span>${selectedPlaces.join(', ')}</div>
+                    ${comment ? `<div class="result-item"><span>Комментарий</span>${comment}</div>` : ''}
+                `;
+            } else {
+                const tgText = `💔 <b>Откликнулись: Не получится</b>\n` + 
+                    (comment ? `💬 <b>Комментарий:</b> ${comment}` : '');
+                
+                sendTelegramNotification(tgText);
+
+                resultContent.innerHTML = `
+                    <div class="result-title">Ничего страшного!</div>
+                    <p style="color: #48484a; font-size: 15px;">Спасибо за ответ. В другой раз обязательно получится! ✨</p>
+                `;
+            }
+
+            formScreen.style.display = 'none';
+            resultScreen.classList.add('active');
+        }
+    </script>
+</body>
+</html>
